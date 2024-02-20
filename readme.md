@@ -1,6 +1,11 @@
-This is an ambitious pet project. Javascript is a bit of a mess since it's mostly just a proof-of-concept. Inspired by a terrible project management system whose comment/discussion functionality doesn't support embedding images or media of any sort. This allows users to drop-in hyperlinks to uploaded images when creating comments. Then convert those hyperlinks to `<img>` tags when viewing the content in the future. Currently all client-side functionality is handled using Bookmarklets, but this can be rolled into a browser extension if it proves useful.
+This is an ambitious pet project. Javascript is a bit of a mess since it's mostly just a proof-of-concept. Inspired by a terrible project management system whose comment/discussion functionality doesn't support embedding images or media of any sort.
 
 The purpose of this script is two-fold.
+
+1. The *File Dropper* component allows users to drop-in hyperlinks to uploaded images when creating comments. 
+2. The *File Replacer* component converts those hyperlinks to `<img>` tags when viewing the content in the future.
+
+Currently all client-side functionality is handled using Bookmarklets, but this can be rolled into a browser extension if it proves useful.
 
 ## File Dropper
 

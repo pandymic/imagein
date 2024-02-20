@@ -44,5 +44,5 @@ This is a simple bookmarklet that finds the matching file absolute URL and repla
 
 ### Bookmarklet
 <pre>
-javascript:(function(a){for(var i = 0; i < a.length; i++) {if ( 'A' === a[i].nodeName && 1 === a[i].childNodes.length && a[i].childNodes[0].nodeType === 3 && a[i].childNodes[0].nodeValue.match(/^<i>[project-base-url-preg-escaped]</i>file\/[a-fA-F0-9]+\.webp$/) ) {a[i].target = '_blank'; a[i].dataset.originalText = a[i].childNodes[0].nodeValue;a[i].innerHTML = '&lt;img src="' + encodeURI( a[i].childNodes[0].nodeValue ) + '" style="width:100%;height:auto;max-width:100%"&gt;';}}})(document.getElementsByTagName('*'));
+javascript:(function(a){for(var i = 0; i < a.length; i++) {if ( 'A' === a[i].nodeName && a[i].textContent.match(/^<i>[project-base-url-preg-escaped]</i>file\/[a-fA-F0-9]+\.webp$/) ) {a[i].target = '_blank'; a[i].dataset.originalText = a[i].textContent;a[i].innerHTML = '&lt;img src="' + encodeURI( a[i].textContent ) + '" style="width:100%;height:auto;max-width:100%"&gt;';}}})(document.getElementsByTagName('*'));
 </pre>

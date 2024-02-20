@@ -17,6 +17,16 @@ The dropper opens a `<dialog>` modal over the page. After an image is successful
 
 * For privacy the github repo does not include any URL's or paths to the actual production environment. Instead, all of these values are stored server-side in a configuration file called `imagein.conf`. It's assumed that the file is a valid PHP script with a return statement on its last line. It lives in the folder `/etc` relative to the project directory (i.e. `../../etc` relative to the web root.)
 * The base URL as well as the CSS string in the bookmarklet below are generated server-side for conveninence. See `index.php` in the web root.
+* An example of this configuration file is as follows
+<pre>
+&lt;?php
+
+return (object)[
+  'baseUrl' => '<i>BASE_URL_TO_APP</i>',
+  'cssString' => base64_encode( preg_replace( '/[\r\n]+/', '', preg_replace( '/^\s+/', '', file_get_contents( __DIR__ . '/../html/imagein/imagein.css' ) ) ) ),
+  'testFile' => 'file/' . basename( array_pop( glob( __DIR__ . '/../html/imagein/file/*.webp' ) ), '.webp' ) . '.webp'
+];
+</pre>
 
 ### Bookmarklet
 <pre>

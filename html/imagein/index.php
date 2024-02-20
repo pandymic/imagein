@@ -1,17 +1,8 @@
-<?php
-
-$imagein_conf = include __DIR__ . '/../../etc/imagein.conf';
-
-$imagein_script_url = $imagein_conf->baseUrl . 'imagein.js?baseUrl=' . htmlspecialchars( $imagein_conf->baseUrl ) . '&css=' . htmlspecialchars( $imagein_conf->cssString );
-$imagein_script_embed = preg_replace( '/[\r\n]+/', '', preg_replace( '/console\.(log|dir)\(.*/', '', preg_replace( '/\/\/.*/', '', preg_replace( '/^\s+/', '', file_get_contents( __DIR__ . '/imagein.js' ) ) ) ) );
-$imagein_script_embed = str_replace( 'searchParams: Object.fromEntries( new URL( document.currentScript.src ).searchParams )', 'searchParams: ' . json_encode( (object)[ 'baseUrl' => $imagein_conf->baseUrl, 'css' => $imagein_conf->cssString ] ), $imagein_script_embed );
-
-?>
 <html>
 
 <head>
 
-<title>Imagein File Dropper</title>
+<title>Imagein File Replace</title>
 
 <style>
 
@@ -19,21 +10,31 @@ body {
   font-family: sans-serif;
 }
 
-div[contentEditable] {
-  
-  padding: 15px;
-  border: 1px solid #efefef;
-  
+h1 {
+  font-size: 2rem;
 }
 
-pre {
-  
-  padding: 15px;
-  border: 1px solid #ccc;
-  background-color: #efefef;
-  
-  font-family: monospace;
-  white-space: wrap;
+div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+div a {
+  display: block;
+  aspect-ratio: 1 / 1;
+  flex: min( 256px, 5vw ) 1 1;
+  min-width: 256px;
+  max-height: max( 512px, 10vw );
+  overflow: hidden;
+}
+
+div a img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
 }
 
 </style>
@@ -42,20 +43,49 @@ pre {
 
 <body>
 
-<div contentEditable>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sem risus, imperdiet auctor facilisis malesuada, tincidunt eu dolor. Donec rhoncus erat a arcu placerat vehicula. Nullam sed sem nec magna congue tristique a eu enim. Etiam pretium orci quam, sit amet pellentesque lorem vulputate quis. Nam elementum neque at erat mattis venenatis. Sed metus sapien, elementum ac rhoncus eu, consequat in enim. Donec dictum ipsum ut blandit ultricies.</p>
-  <p>&nbsp;</p>
-  <p>In vel ligula nec sem venenatis eleifend id non diam. In et ligula ac lectus dignissim placerat ut aliquam est. Ut efficitur facilisis sem sit amet suscipit. Curabitur ac erat quam. Fusce scelerisque a enim a feugiat. Duis dui velit, eleifend vitae placerat ut, tristique at nulla. Aliquam pellentesque, orci nec luctus elementum, massa metus posuere nisl, non pulvinar lacus quam in diam. Phasellus ac consectetur orci, vel malesuada ipsum.</p>
-</div>
+<h1>Imagein File Drop &amp; Replace</h1>
+<p></p>
 
-<hr>
-<pre>
-javascript:(function(a){const b = a.createElement( 'SCRIPT' ); b.src = '<?php print $imagein_script_url; ?>&_' + Date.now(); document.body.appendChild(b) })(document);
-</pre>
-<pre>
-javascript:<?php print $imagein_script_embed; ?>
-</pre>
+<h2>Documentation</h2>
+<ul>
+  <li><a href="./drop.php">Imagein File Drop Sandbox &amp; Bookmarklet</a></li>
+  <li><a href="./replace.php">Imagein File Replace Sandbox &amp; Bookmarklet</a></li>
+</ul>
+
+<h2>Gallery</h2>
+<p>Click to copy URL.</p>
+<div><?php
+
+$files = glob( __DIR__ . '/file/*.webp' );
+if ( is_array( $files ) ) {
+  foreach( $files as $file ) {
+    
+    $href = 'file/' . basename( $file, '.webp' ) . '.webp';
+    $src = 'data:image/webp;base64,' . base64_encode( file_get_contents( __DIR__ . '/' . $href ) );
+    
+    print '<a href="' . htmlspecialchars( $href ) . '" title="' . basename( $file ) . '"><img src="' . $src . '"></a>';
+  }
+}
+
+?></div>
+
+<script>
+
+document.addEventListener( 'DOMContentLoaded', ( e ) => {
+  
+  document.querySelectorAll( 'div > a' ).forEach( ( link ) => {
+    
+    link.addEventListener( 'click', ( e ) => {
+      e.preventDefault();
+      window.navigator.clipboard.writeText( e.target.href );
+    } );
+    
+  } );
+  
+} );
+
+</script>
 
 </body>
 
-</html>
+</html

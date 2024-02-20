@@ -1,249 +1,257 @@
-window.pandymicImagein = window.pandymicImagein || {
-  config: {
-    css: false,
-    init: false,
-    searchParams: Object.fromEntries( new URL( document.currentScript.src ).searchParams )
-  },
-  run: () => {
-    if ( true !== window.pandymicImagein.config.css ) {
-      window.pandymicImagein.config.css = true;
-      const style = document.createElement( 'STYLE' );
-      style.textContent = atob( window.pandymicImagein.config.searchParams.css );
-      document.body.appendChild( style );
-    }
-    if ( true !== window.pandymicImagein.config.init ) {
-      window.pandymicImagein.config.cursor = {
-        activeElement: document.activeElement,
-        selection: window.getSelection()
-      };
-      if ( 'Range' === window.pandymicImagein.config.cursor.selection.type || 'Caret' === window.pandymicImagein.config.cursor.selection.type ) {
-        window.pandymicImagein.config.cursor.range = window.pandymicImagein.config.cursor.selection.getRangeAt(0);
-        window.pandymicImagein.init();
-      } else {
-        delete window.pandymicImagein.config.cursor;
-        window.pandymicImagein.config.cursor = {};
+(function(){
+  window.pandymicImagein = window.pandymicImagein || {
+    config: {
+      css: false,
+      init: false,
+      searchParams: Object.fromEntries( new URL( document.currentScript.src ).searchParams )
+    },
+    run: () => {
+      // console.log( 'p', p );
+      // console.dir( p );
+      if ( true !== p.config.css ) {
+        p.config.css = true;
+        const style = document.createElement( 'STYLE' );
+        style.textContent = atob( p.config.searchParams.css );
+        document.body.appendChild( style );
       }
-    }
-  },
-  dropTarget: null,
-  createDropTarget: () => {
-    
-    const dialog = document.createElement( 'DIALOG' );
-    dialog.dataset.pandymicImageinMessage = '';
-    dialog.addEventListener( 'close', ( e ) => {
-      window.pandymicImagein.config.init = false;
-      delete window.pandymicImagein.config.cursor;
-      window.pandymicImagein.config.cursor = null;
-      window.pandymicImagein.dropTarget.remove();
-      delete window.pandymicImagein.dropTarget;
-      window.pandymicImagein.dropTarget = null;
-    } );
-    
-    document.body.appendChild( dialog );
-    
-    dialog.showModal();
-    
-    return dialog;
-  },
-  dropHandler: ( e ) => {
-    e.preventDefault();
-    window.pandymicImagein.dropTarget.classList.remove( 'pandymic-imagein-drag' );
-
-    const files = Array.from( e.dataTransfer.files );
-    
-    console.log( 'files', files);
-    
-    if ( 0 == files.length ) {
-      dropError( 'File error!' );
-    } else if ( 1 !== files.length ) {
-      dropError( 'Multiple files not supported!' );
-    } else {
-      window.pandymicImagein.fileHandler( files[0] );
-    }
-  },
-  pasteHandler: async ( e ) => {
-    e.preventDefault();
-    
-    const file = await ( async ( dataTransfer ) => {
-      console.dir( dataTransfer );
-      for ( let i = 0; i < dataTransfer.items.length; i++ ) {
-        const item = dataTransfer.items[i];
-        if ( 'file' === item.kind && 0 === item.type.indexOf( 'image/' ) ) {
-          console.log( 'dataTransfer item', item );
-          return item.getAsFile();
+      if ( true !== p.config.init ) {
+        p.config.cursor = {
+          activeElement: document.activeElement,
+          selection: window.getSelection()
+        };
+        if ( 'Range' === p.config.cursor.selection.type || 'Caret' === p.config.cursor.selection.type ) {
+          p.config.cursor.range = p.config.cursor.selection.getRangeAt(0);
+          p.init();
+        } else {
+          delete p.config.cursor;
+          p.config.cursor = {};
         }
       }
-      return false;
-    } )( e.clipboardData );
-    
-    if ( false === file ) {
-      dropError( 'Pasted content is invalid!' );
-    } else {
-      console.log( 'paste image file', file );
-      window.pandymicImagein.fileHandler( file );
-    }
-
-  },
-  fileHandler: ( file ) => {
-    if ( 0 !== file.type.indexOf( 'image/' ) ) {
-      window.pandymicImagein.dropError( 'Invalid file type!' );
-    } else {
+    },
+    dropTarget: null,
+    createDropTarget: () => {
       
-      const reader = new FileReader();
-      reader.addEventListener( 'load', ( e ) => {
+      const dialog = document.createElement( 'DIALOG' );
+      dialog.dataset.pandymicImageinMessage = '';
+      dialog.addEventListener( 'close', ( e ) => {
+        p.config.init = false;
+        delete p.config.cursor;
+        p.config.cursor = null;
+        p.dropTarget.remove();
+        delete p.dropTarget;
+        p.dropTarget = null;
+      } );
+      
+      document.body.appendChild( dialog );
+      
+      dialog.showModal();
+      
+      return dialog;
+    },
+    dropHandler: ( e ) => {
+      e.preventDefault();
+      p.dropTarget.classList.remove( 'pandymic-imagein-drag' );
+
+      const files = Array.from( e.dataTransfer.files );
+      
+      // console.log( 'files', files);
+      
+      if ( 0 == files.length ) {
+        dropError( 'File error!' );
+      } else if ( 1 !== files.length ) {
+        dropError( 'Multiple files not supported!' );
+      } else {
+        p.fileHandler( files[0] );
+      }
+    },
+    pasteHandler: async ( e ) => {
+      e.preventDefault();
+      
+      const file = await ( async ( dataTransfer ) => {
+        // console.dir( dataTransfer );
+        for ( let i = 0; i < dataTransfer.items.length; i++ ) {
+          const item = dataTransfer.items[i];
+          if ( 'file' === item.kind && 0 === item.type.indexOf( 'image/' ) ) {
+            // console.log( 'dataTransfer item', item );
+            return item.getAsFile();
+          }
+        }
+        return false;
+      } )( e.clipboardData );
+      
+      if ( false === file ) {
+        dropError( 'Pasted content is invalid!' );
+      } else {
+        // console.log( 'paste image file', file );
+        p.fileHandler( file );
+      }
+
+    },
+    fileHandler: ( file ) => {
+      if ( 0 !== file.type.indexOf( 'image/' ) ) {
+        p.dropError( 'Invalid file type!' );
+      } else {
         
-        console.log( 'reader load event', e );
-        console.log( 'reader load this', this );
-        console.log( 'reader load reader.result', reader.result );
-        
-        const image = new Image();
-        image.addEventListener( 'load', ( e ) => {
+        const reader = new FileReader();
+        reader.addEventListener( 'load', ( e ) => {
           
-          console.log( 'reader load image load', image );
-          console.dir( image );
+          // console.log( 'reader load event', e );
+          // console.log( 'reader load this', this );
+          // console.log( 'reader load reader.result', reader.result );
           
-          Promise.resolve( createImageBitmap( image ) ).then( ( bitmap ) => {
-            console.log( 'reader load createImageBitmap Promise bitmap', bitmap );
+          const image = new Image();
+          image.addEventListener( 'load', ( e ) => {
             
-            const maxSize = 960;
+            // console.log( 'reader load image load', image );
+            // console.dir( image );
             
-            const canvas = document.createElement( 'CANVAS' );
-            const context = canvas.getContext( "2d", { alpha: true } );
-            
-            const { width, height } = bitmap;
-            
-            canvas.width = width;
-            canvas.height = height;
+            Promise.resolve( createImageBitmap( image ) ).then( ( bitmap ) => {
+              // console.log( 'reader load createImageBitmap Promise bitmap', bitmap );
+              
+              const maxSize = 960;
+              
+              const canvas = document.createElement( 'CANVAS' );
+              const context = canvas.getContext( "2d", { alpha: true } );
+              
+              const { width, height } = bitmap;
+              
+              canvas.width = width;
+              canvas.height = height;
 
-            const ratio = height / width;
-            
-            if ( height > maxSize && ratio >= 1 ) {
-              canvas.width = maxSize / ratio;
-              canvas.height = maxSize;
-            } else if ( width > maxSize && ratio <= 1 ) {
-              canvas.width = maxSize;
-              canvas.height = maxSize * ratio;
-            }
-            
-            context.drawImage( bitmap, 0, 0, width, height, 0, 0, canvas.width, canvas.height );
-            const dataurl = canvas.toDataURL( 'image/webp' );
+              const ratio = height / width;
+              
+              if ( height > maxSize && ratio >= 1 ) {
+                canvas.width = maxSize / ratio;
+                canvas.height = maxSize;
+              } else if ( width > maxSize && ratio <= 1 ) {
+                canvas.width = maxSize;
+                canvas.height = maxSize * ratio;
+              }
+              
+              context.drawImage( bitmap, 0, 0, width, height, 0, 0, canvas.width, canvas.height );
+              const dataurl = canvas.toDataURL( 'image/webp' );
 
-            canvas.toBlob( ( blob ) => {
-              if ( null !== blob ) {
-                const formData = new FormData();
-                formData.append( 'file', blob );
-                formData.append( 'base64', dataurl );
-                formData.append( 'name', file.name );
-                fetch( window.pandymicImagein.config.searchParams.baseUrl + 'upload.php', { method: 'POST', type: 'multipart/form-data', body: formData } )
-                .then( function( response ) {
-                  return response.json();
-                } )
-                .then( function( result ) {
-                  console.log( 'fetch result', result );
-                  
-                  window.pandymicImagein.dropTarget.removeEventListener( 'drop', window.pandymicImagein.dropHandler );
-                  window.pandymicImagein.dropTarget.removeEventListener( 'paste', window.pandymicImagein.pasteHandler );
+              canvas.toBlob( ( blob ) => {
+                if ( null !== blob ) {
+                  const formData = new FormData();
+                  formData.append( 'file', blob );
+                  formData.append( 'base64', dataurl );
+                  formData.append( 'name', file.name );
+                  fetch( p.config.searchParams.baseUrl + 'upload.php', { method: 'POST', type: 'multipart/form-data', body: formData } )
+                  .then( function( response ) {
+                    return response.json();
+                  } )
+                  .then( function( result ) {
 
-                  window.pandymicImagein.dropTarget.classList.add( 'pandymic-imagein-success' );
-                  window.pandymicImagein.dropTarget.dataset.pandymicImageinMessage = 'Upload successful!';
-
-                  console.log( window.pandymicImagein.config.searchParams.baseUrl + result.path );
-                  console.log( 'window.pandymicImagein.config.activeElement', window.pandymicImagein.config.activeElement );
-                  console.dir( window.pandymicImagein.config.activeElement );
-                  
-                  console.dir( window.pandymicImagein.config.cursor ); 
-                  
-                  // window.pandymicImagein.config.cursor.activeElement.focus();
-                  window.pandymicImagein.config.cursor.range.deleteContents();
-                  
-                  var link;
-                  if ( 'true' === window.pandymicImagein.config.cursor.activeElement.contentEditable ) {
-                    link = document.createElement( 'A' );
-                    link.href = window.pandymicImagein.config.searchParams.baseUrl + result.path;
-                    link.textContent = window.pandymicImagein.config.searchParams.baseUrl + result.path;
-                  } else {
-                    link = document.createTextNode( window.pandymicImagein.config.searchParams.baseUrl + result.path );
-                  }
-                  window.pandymicImagein.config.cursor.range.insertNode( link );
-                  
-                  setTimeout( () => {
+                    // console.log( 'fetch result', result );
                     
-                    window.pandymicImagein.dropTarget.style.opacity = 0;
-                    window.pandymicImagein.dropTarget.style.scale = 0.5;
+                    p.dropTarget.removeEventListener( 'drop', p.dropHandler );
+                    p.dropTarget.removeEventListener( 'paste', p.pasteHandler );
+
+                    p.dropTarget.classList.add( 'pandymic-imagein-success' );
+                    p.dropTarget.dataset.pandymicImageinMessage = 'Upload successful!';
+
+                    // console.log( p.config.searchParams.baseUrl + result.path );
+                    // console.log( 'p.config.activeElement', p.config.activeElement );
+                    // console.dir( p.config.activeElement );
+                    
+                    // console.dir( p.config.cursor ); 
+                    
+                    if ( 'INPUT' === p.config.cursor.activeElement.nodeName || 'TEXTAREA' === p.config.cursor.activeElement.nodeName ) {
+                      var field = p.config.cursor.activeElement;
+                      field.value = field.value.substring( 0, field.selectionStart ) + p.config.searchParams.baseUrl + result.path + field.value.substring( field.selectionEnd, field.value.length );
+                    } else {
+                      p.config.cursor.range.deleteContents();
+                      var link;
+                      if ( 'true' === p.config.cursor.activeElement.contentEditable ) {
+                        link = document.createElement( 'A' );
+                        link.href = p.config.searchParams.baseUrl + result.path;
+                        link.textContent = p.config.searchParams.baseUrl + result.path;
+                      } else {
+                        link = document.createTextNode( p.config.searchParams.baseUrl + result.path );
+                      }
+                      p.config.cursor.range.insertNode( link );
+                    }
                     
                     setTimeout( () => {
-                      window.pandymicImagein.config.init = false;
-                      delete window.pandymicImagein.config.cursor;
-                      window.pandymicImagein.config.cursor = null;
-                      window.pandymicImagein.dropTarget.remove();
-                      delete window.pandymicImagein.dropTarget;
-                      window.pandymicImagein.dropTarget = null;
-                    }, 500 );
+                      
+                      p.dropTarget.style.opacity = 0;
+                      p.dropTarget.style.scale = 0.5;
+                      
+                      setTimeout( () => {
+                        p.config.init = false;
+                        delete p.config.cursor;
+                        p.config.cursor = null;
+                        p.dropTarget.remove();
+                        delete p.dropTarget;
+                        p.dropTarget = null;
+                      }, 500 );
+                      
+                    }, 1000 );
                     
-                  }, 1000 );
-                  
-                } );
-              }
-            }, 'image/webp' );
-            
+                  } );
+                }
+              }, 'image/webp' );
+              
+              
+            } );
             
           } );
+          image.src = reader.result;
           
         } );
-        image.src = reader.result;
+        reader.addEventListener( 'error', ( e ) => {
+         p.dropError( 'Error reading file!' );
+        } );
+        reader.readAsDataURL( file );
         
-      } );
-      reader.addEventListener( 'error', ( e ) => {
-       window.pandymicImagein.dropError( 'Error reading file!' );
-      } );
-      reader.readAsDataURL( file );
+      }
+
+    },
+    dropError: ( message ) => {
+      p.dropTarget.classList.add( 'pandymic-imagein-error' );
+      p.dropTarget.dataset.pandymicImageinMessage = message;
+    },
+    init: () => {
       
+      p.config.init = true;
+      
+      // console.log( 'p', p );
+      
+      p.dropTarget = p.createDropTarget();
+      p.dropTarget.classList.add( 'pandymic-imagein' );
+      
+      p.dropTarget.addEventListener( 'dragenter', ( e ) => {
+        e.preventDefault();
+        if ( p.dropTarget.dataset.pandymicImageinMessage.length ) p.dropTarget.dataset.pandymicImageinMessage = '';
+        p.dropTarget.classList.remove( 'pandymic-imagein-error' );
+        p.dropTarget.classList.add( 'pandymic-imagein-drag' );
+      });
+
+      p.dropTarget.addEventListener( 'dragover', ( e ) => {
+        e.preventDefault();
+        if ( p.dropTarget.dataset.pandymicImageinMessage.length ) p.dropTarget.dataset.pandymicImageinMessage = '';
+        p.dropTarget.classList.remove( 'pandymic-imagein-error' );
+        p.dropTarget.classList.add( 'pandymic-imagein-drag' );
+      });
+
+      p.dropTarget.addEventListener( 'dragleave', ( e ) => {
+        e.preventDefault();
+        p.dropTarget.classList.remove( 'pandymic-imagein-drag' );
+      });
+
+      p.dropTarget.addEventListener( 'drop', p.dropHandler );
+      p.dropTarget.addEventListener( 'paste', p.pasteHandler );
+
+    },
+    reset: () => {
+      // console.dir( 'reset' );
     }
-
-  },
-  dropError: ( message ) => {
-    window.pandymicImagein.dropTarget.classList.add( 'pandymic-imagein-error' );
-    window.pandymicImagein.dropTarget.dataset.pandymicImageinMessage = message;
-  },
-  init: () => {
-    
-    window.pandymicImagein.config.init = true;
-    
-    console.log( 'window.pandymicImagein', window.pandymicImagein );
-    
-    window.pandymicImagein.dropTarget = window.pandymicImagein.createDropTarget();
-    window.pandymicImagein.dropTarget.classList.add( 'pandymic-imagein' );
-    
-    window.pandymicImagein.dropTarget.addEventListener( 'dragenter', ( e ) => {
-      e.preventDefault();
-      if ( window.pandymicImagein.dropTarget.dataset.pandymicImageinMessage.length ) window.pandymicImagein.dropTarget.dataset.pandymicImageinMessage = '';
-      window.pandymicImagein.dropTarget.classList.remove( 'pandymic-imagein-error' );
-      window.pandymicImagein.dropTarget.classList.add( 'pandymic-imagein-drag' );
-    });
-
-    window.pandymicImagein.dropTarget.addEventListener( 'dragover', ( e ) => {
-      e.preventDefault();
-      if ( window.pandymicImagein.dropTarget.dataset.pandymicImageinMessage.length ) window.pandymicImagein.dropTarget.dataset.pandymicImageinMessage = '';
-      window.pandymicImagein.dropTarget.classList.remove( 'pandymic-imagein-error' );
-      window.pandymicImagein.dropTarget.classList.add( 'pandymic-imagein-drag' );
-    });
-
-    window.pandymicImagein.dropTarget.addEventListener( 'dragleave', ( e ) => {
-      e.preventDefault();
-      window.pandymicImagein.dropTarget.classList.remove( 'pandymic-imagein-drag' );
-    });
-
-    window.pandymicImagein.dropTarget.addEventListener( 'drop', window.pandymicImagein.dropHandler );
-    window.pandymicImagein.dropTarget.addEventListener( 'paste', window.pandymicImagein.pasteHandler );
-
-  },
-  reset: () => {
-    console.dir( 'reset' );
+  };
+  let p = window.pandymicImagein;
+  if ( 'complete' !== document.readyState ) {
+    document.addEventListener( 'DOMContentLoaded', ( e ) => { p.run(); } );
+  } else {
+    p.run();
   }
-};
-
-if ( 'complete' !== document.readyState ) {
-  document.addEventListener( 'DOMContentLoaded', ( e ) => { window.pandymicImagein.run(); } );
-} else {
-  window.pandymicImagein.run();
-}
+})();

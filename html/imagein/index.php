@@ -3,6 +3,8 @@
 $imagein_conf = include __DIR__ . '/../../etc/imagein.conf';
 
 $imagein_script_url = $imagein_conf->baseUrl . 'imagein.js?baseUrl=' . htmlspecialchars( $imagein_conf->baseUrl ) . '&css=' . htmlspecialchars( $imagein_conf->cssString );
+$imagein_script_embed = preg_replace( '/[\r\n]+/', '', preg_replace( '/console\.(log|dir)\(.*/', '', preg_replace( '/\/\/.*/', '', preg_replace( '/^\s+/', '', file_get_contents( __DIR__ . '/imagein.js' ) ) ) ) );
+$imagein_script_embed = str_replace( 'searchParams: Object.fromEntries( new URL( document.currentScript.src ).searchParams )', 'searchParams: ' . json_encode( (object)[ 'baseUrl' => $imagein_conf->baseUrl, 'css' => $imagein_conf->cssString ] ), $imagein_script_embed );
 
 ?>
 <html>
@@ -48,9 +50,11 @@ pre {
 
 <hr>
 <pre>
-javascript:(function(a){const b = a.createElement( 'SCRIPT' ); b.src = '<?php print $imagein_script_url; ?>'; document.body.appendChild(b) })(document)
+javascript:(function(a){const b = a.createElement( 'SCRIPT' ); b.src = '<?php print $imagein_script_url; ?>&_' + Date.now(); document.body.appendChild(b) })(document);
 </pre>
-<?php /* <button onclick="javascript:(function(a){const b = a.createElement( 'SCRIPT' ); b.src = '<?php print $imagein_script_url; ?>&_' + Date.now(); document.body.appendChild(b) })(document)">Insert Image</button> */ ?>
+<pre>
+javascript:<?php print $imagein_script_embed; ?>
+</pre>
 
 </body>
 

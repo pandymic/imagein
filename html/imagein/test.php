@@ -41,10 +41,10 @@ pre {
 <hr>
 
 <pre style="white-space:wrap;">
-javascript:(function(a){for(var i = 0; i &lt; a.length; i++) {if ( 'A' === a[i].nodeName && a[i].textContent.match(&lt;?php print $imagein_test_preg; ?&gt;) ) {a[i].target = '_blank'; a[i].dataset.originalText = a[i].textContent;a[i].innerHTML = '&lt;img src=&quot;' + encodeURI( a[i].textContent ) + '&quot; style=&quot;width:100%;height:auto;max-width:100%&quot;&gt;';}}})(document.getElementsByTagName('*'));
+javascript:(function(a){for(var i = 0; i &lt; a.length; i++) {if ( a[i].textContent.match(&lt;?php print $imagein_test_preg; ?&gt;) ) {a[i].dataset.originalText = a[i].textContent;a[i].innerHTML = '&lt;img src=&quot;' + encodeURI( a[i].textContent ) + '&quot; style=&quot;width:100%;height:auto;max-width:100%&quot;&gt;';}}})(document.getElementsByTagName('*'));
 </pre>
 
-<div><button onclick="javascript:(function(a){for(var i = 0; i < a.length; i++) {if ( 'A' === a[i].nodeName && a[i].textContent.match(<?php print $imagein_test_preg; ?>) ) {a[i].target = '_blank'; a[i].dataset.originalText = a[i].textContent;a[i].innerHTML = '<img src=&quot;' + encodeURI( a[i].textContent ) + '&quot; style=&quot;width:100%;height:auto;max-width:100%&quot;>';}}})(document.getElementsByTagName('*'));">Run!</button></div>
+<div><button onclick="javascript:(function(a){for(var i = 0; i < a.length; i++) {if ( a[i].textContent.match(<?php print $imagein_test_preg; ?>) ) {a[i].dataset.originalText = a[i].textContent;a[i].innerHTML = '<img src=&quot;' + encodeURI( a[i].textContent ) + '&quot; style=&quot;width:100%;height:auto;max-width:100%&quot;>';}}})(document.getElementsByTagName('*'));">Run!</button></div>
 
 </body>
 

@@ -1,0 +1,6 @@
+# Ignore evyerthing in root except src folder and select files
+/*
+!/html
+!/.gitignore
+!/readme.md
+/html/imagein/file/*

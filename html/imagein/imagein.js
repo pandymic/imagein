@@ -126,13 +126,15 @@ window.pandymicImagein = window.pandymicImagein || {
             }
             
             context.drawImage( bitmap, 0, 0, width, height, 0, 0, canvas.width, canvas.height );
+            const dataurl = canvas.toDataURL( 'image/webp' );
 
             canvas.toBlob( ( blob ) => {
               if ( null !== blob ) {
                 const formData = new FormData();
                 formData.append( 'file', blob );
+                formData.append( 'base64', dataurl );
                 formData.append( 'name', file.name );
-                fetch( 'upload.php', { method: 'POST', type: 'multipart/form-data', body: formData } )
+                fetch( window.pandymicImagein.config.searchParams.baseUrl + 'upload.php', { method: 'POST', type: 'multipart/form-data', body: formData } )
                 .then( function( response ) {
                   return response.json();
                 } )

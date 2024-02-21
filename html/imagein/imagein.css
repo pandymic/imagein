@@ -6,10 +6,11 @@
   height: 512px;
   border-radius:60px;
   transition: opacity 375ms ease-out, scale 250ms ease-out 125ms;
+  overflow: visible
 }
 .pandymic-imagein::backdrop {
   background-color: #000;
-  opacity: 0.85;
+  opacity: 0.85
 }
 .pandymic-imagein:before {
   content: '';
@@ -19,7 +20,8 @@
   bottom: 10px;
   left: 10px;
   border: 5px dashed currentcolor;
-  border-radius: 50px
+  border-radius: 50px;
+  transition: scale 125ms ease-in;
 }
 .pandymic-imagein:after {
   content: 'Drag file here.';
@@ -31,7 +33,7 @@
   color: currentcolor;
   font-family: monospace;
   font-size: 5vh;
-  line-height: 1.2;
+  line-height: 1.1;
   text-align: center
 }
 .pandymic-imagein.pandymic-imagein-drag:after {
@@ -43,10 +45,48 @@
 .pandymic-imagein.pandymic-imagein-drag {
   color: #06c
 }
+.pandymic-imagein.pandymic-imagein-drag:before {
+  scale: 0.95
+}
 .pandymic-imagein.pandymic-imagein-success {
   pointer-events: none;
   color: #0c3
 }
 .pandymic-imagein:not([data-pandymic-imagein-message=""]):after {
   content: attr( data-pandymic-imagein-message ) !important
+}
+
+.pandymic-imagein button {
+  color: #666;
+  position: absolute;
+  left: calc( 50% - 40px );
+  bottom: -120px;
+  background-color: #fff;
+  border: 0;
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: color 125ms ease-in, scale 125ms ease-in;
+  font-size: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1
+}
+
+.pandymic-imagein button:hover {
+  color: #000;
+  scale: 1.05
+}
+
+.pandymic-imagein button:before {
+  content: '';
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  bottom: 5px;
+  left: 5px;
+  border: 5px dashed currentcolor;
+  border-radius: 35px
 }

@@ -6,8 +6,6 @@
       searchParams: Object.fromEntries( new URL( document.currentScript.src ).searchParams )
     },
     run: () => {
-      // console.log( 'p', p );
-      // console.dir( p );
       if ( true !== p.config.css ) {
         p.config.css = true;
         const style = document.createElement( 'STYLE' );
@@ -31,7 +29,7 @@
     dropTarget: null,
     createDropTarget: () => {
       
-      const dialog = document.createElement( 'DIALOG' );
+      const dialog = document.createElement( 'DIALOG' ), input = document.createElement( 'INPUT' ), close = document.createElement( 'BUTTON' );
       dialog.dataset.pandymicImageinMessage = '';
       dialog.addEventListener( 'close', ( e ) => {
         p.config.init = false;
@@ -42,6 +40,32 @@
         p.dropTarget = null;
       } );
       
+      input.type = 'file';
+      input.accept = 'image/png, image/jpeg, image/webp';
+      input.addEventListener( 'change', ( e ) => {
+        const files = Array.from( input.files );
+        if ( 0 == files.length ) {
+          dropError( 'File error!' );
+        } else if ( 1 !== files.length ) {
+          dropError( 'Multiple files not supported!' );
+        } else {
+          p.fileHandler( files[0] );
+        }
+      } );
+      
+      dialog.addEventListener( 'click', ( e ) => {
+        input.click();
+      } );
+      dialog.filePickerToggle = input;
+      
+      close.textContent = '×';
+      close.addEventListener( 'click', ( e ) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dialog.close();
+      } );
+      dialog.appendChild( close );
+      
       document.body.appendChild( dialog );
       
       dialog.showModal();
@@ -51,11 +75,7 @@
     dropHandler: ( e ) => {
       e.preventDefault();
       p.dropTarget.classList.remove( 'pandymic-imagein-drag' );
-
       const files = Array.from( e.dataTransfer.files );
-      
-      // console.log( 'files', files);
-      
       if ( 0 == files.length ) {
         dropError( 'File error!' );
       } else if ( 1 !== files.length ) {
@@ -68,11 +88,9 @@
       e.preventDefault();
       
       const file = await ( async ( dataTransfer ) => {
-        // console.dir( dataTransfer );
         for ( let i = 0; i < dataTransfer.items.length; i++ ) {
           const item = dataTransfer.items[i];
           if ( 'file' === item.kind && 0 === item.type.indexOf( 'image/' ) ) {
-            // console.log( 'dataTransfer item', item );
             return item.getAsFile();
           }
         }
@@ -82,7 +100,6 @@
       if ( false === file ) {
         dropError( 'Pasted content is invalid!' );
       } else {
-        // console.log( 'paste image file', file );
         p.fileHandler( file );
       }
 
@@ -94,19 +111,10 @@
         
         const reader = new FileReader();
         reader.addEventListener( 'load', ( e ) => {
-          
-          // console.log( 'reader load event', e );
-          // console.log( 'reader load this', this );
-          // console.log( 'reader load reader.result', reader.result );
-          
           const image = new Image();
           image.addEventListener( 'load', ( e ) => {
             
-            // console.log( 'reader load image load', image );
-            // console.dir( image );
-            
             Promise.resolve( createImageBitmap( image ) ).then( ( bitmap ) => {
-              // console.log( 'reader load createImageBitmap Promise bitmap', bitmap );
               
               const maxSize = 960;
               
@@ -143,19 +151,11 @@
                   } )
                   .then( function( result ) {
 
-                    // console.log( 'fetch result', result );
-                    
                     p.dropTarget.removeEventListener( 'drop', p.dropHandler );
                     p.dropTarget.removeEventListener( 'paste', p.pasteHandler );
 
                     p.dropTarget.classList.add( 'pandymic-imagein-success' );
                     p.dropTarget.dataset.pandymicImageinMessage = 'Upload successful!';
-
-                    // console.log( p.config.searchParams.baseUrl + result.path );
-                    // console.log( 'p.config.activeElement', p.config.activeElement );
-                    // console.dir( p.config.activeElement );
-                    
-                    // console.dir( p.config.cursor ); 
                     
                     if ( 'INPUT' === p.config.cursor.activeElement.nodeName || 'TEXTAREA' === p.config.cursor.activeElement.nodeName ) {
                       var field = p.config.cursor.activeElement;
@@ -215,9 +215,6 @@
     init: () => {
       
       p.config.init = true;
-      
-      // console.log( 'p', p );
-      
       p.dropTarget = p.createDropTarget();
       p.dropTarget.classList.add( 'pandymic-imagein' );
       
@@ -243,15 +240,9 @@
       p.dropTarget.addEventListener( 'drop', p.dropHandler );
       p.dropTarget.addEventListener( 'paste', p.pasteHandler );
 
-    },
-    reset: () => {
-      // console.dir( 'reset' );
     }
   };
   let p = window.pandymicImagein;
-  if ( 'complete' !== document.readyState ) {
-    document.addEventListener( 'DOMContentLoaded', ( e ) => { p.run(); } );
-  } else {
-    p.run();
-  }
+  if ( 'complete' !== document.readyState ) document.addEventListener( 'DOMContentLoaded', ( e ) => { p.run(); } );
+  else p.run();
 })();

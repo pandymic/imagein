@@ -1,0 +1,12 @@
+{
+    "name": "pandymic/imagein",
+    "description": "Easy image upload on click/drag-and-drop/paste with corresponding drop-in display functionality.",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Michal Pandyra",
+            "email": "mike@pandymic.com"
+        }
+    ],
+    "require": {}
+}

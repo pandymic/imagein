@@ -1,4 +1,4 @@
-(function(){
+( () => {
   window.pandymicImagein = window.pandymicImagein || {
     config: {
       css: false,
@@ -18,7 +18,7 @@
           selection: window.getSelection()
         };
         if ( 'Range' === p.config.cursor.selection.type || 'Caret' === p.config.cursor.selection.type ) {
-          p.config.cursor.range = p.config.cursor.selection.getRangeAt(0);
+          p.config.cursor.range = p.config.cursor.selection.getRangeAt( 0 );
           p.init();
         } else {
           delete p.config.cursor;
@@ -31,7 +31,7 @@
       
       const dialog = document.createElement( 'DIALOG' ), input = document.createElement( 'INPUT' ), close = document.createElement( 'BUTTON' );
       dialog.dataset.pandymicImageinMessage = '';
-      dialog.addEventListener( 'close', ( e ) => {
+      dialog.addEventListener( 'close', e => {
         p.config.init = false;
         delete p.config.cursor;
         p.config.cursor = null;
@@ -42,7 +42,7 @@
       
       input.type = 'file';
       input.accept = 'image/png, image/jpeg, image/webp';
-      input.addEventListener( 'change', ( e ) => {
+      input.addEventListener( 'change', e => {
         const files = Array.from( input.files );
         if ( 0 == files.length ) {
           dropError( 'File error!' );
@@ -53,13 +53,13 @@
         }
       } );
       
-      dialog.addEventListener( 'click', ( e ) => {
+      dialog.addEventListener( 'click', e => {
         input.click();
       } );
       dialog.filePickerToggle = input;
       
       close.textContent = '×';
-      close.addEventListener( 'click', ( e ) => {
+      close.addEventListener( 'click', e => {
         e.preventDefault();
         e.stopPropagation();
         dialog.close();
@@ -72,7 +72,7 @@
       
       return dialog;
     },
-    dropHandler: ( e ) => {
+    dropHandler: e => {
       e.preventDefault();
       p.dropTarget.classList.remove( 'pandymic-imagein-drag' );
       const files = Array.from( e.dataTransfer.files );
@@ -84,10 +84,10 @@
         p.fileHandler( files[0] );
       }
     },
-    pasteHandler: async ( e ) => {
+    pasteHandler: async e => {
       e.preventDefault();
       
-      const file = await ( async ( dataTransfer ) => {
+      const file = await ( async dataTransfer => {
         for ( let i = 0; i < dataTransfer.items.length; i++ ) {
           const item = dataTransfer.items[i];
           if ( 'file' === item.kind && 0 === item.type.indexOf( 'image/' ) ) {
@@ -104,17 +104,17 @@
       }
 
     },
-    fileHandler: ( file ) => {
+    fileHandler: file => {
       if ( 0 !== file.type.indexOf( 'image/' ) ) {
         p.dropError( 'Invalid file type!' );
       } else {
         
         const reader = new FileReader();
-        reader.addEventListener( 'load', ( e ) => {
+        reader.addEventListener( 'load', e => {
           const image = new Image();
-          image.addEventListener( 'load', ( e ) => {
+          image.addEventListener( 'load', e => {
             
-            Promise.resolve( createImageBitmap( image ) ).then( ( bitmap ) => {
+            Promise.resolve( createImageBitmap( image ) ).then( bitmap => {
               
               const maxSize = 960;
               
@@ -139,17 +139,17 @@
               context.drawImage( bitmap, 0, 0, width, height, 0, 0, canvas.width, canvas.height );
               const dataurl = canvas.toDataURL( 'image/webp' );
 
-              canvas.toBlob( ( blob ) => {
+              canvas.toBlob( blob => {
                 if ( null !== blob ) {
                   const formData = new FormData();
                   formData.append( 'file', blob );
                   formData.append( 'base64', dataurl );
                   formData.append( 'name', file.name );
                   fetch( p.config.searchParams.baseUrl + 'upload.php', { method: 'POST', type: 'multipart/form-data', body: formData } )
-                  .then( function( response ) {
+                  .then( response => {
                     return response.json();
                   } )
-                  .then( function( result ) {
+                  .then( result => {
 
                     p.dropTarget.removeEventListener( 'drop', p.dropHandler );
                     p.dropTarget.removeEventListener( 'paste', p.pasteHandler );
@@ -200,7 +200,7 @@
           image.src = reader.result;
           
         } );
-        reader.addEventListener( 'error', ( e ) => {
+        reader.addEventListener( 'error', e => {
          p.dropError( 'Error reading file!' );
         } );
         reader.readAsDataURL( file );
@@ -208,7 +208,7 @@
       }
 
     },
-    dropError: ( message ) => {
+    dropError: message => {
       p.dropTarget.classList.add( 'pandymic-imagein-error' );
       p.dropTarget.dataset.pandymicImageinMessage = message;
     },
@@ -218,21 +218,21 @@
       p.dropTarget = p.createDropTarget();
       p.dropTarget.classList.add( 'pandymic-imagein' );
       
-      p.dropTarget.addEventListener( 'dragenter', ( e ) => {
+      p.dropTarget.addEventListener( 'dragenter', e => {
         e.preventDefault();
         if ( p.dropTarget.dataset.pandymicImageinMessage.length ) p.dropTarget.dataset.pandymicImageinMessage = '';
         p.dropTarget.classList.remove( 'pandymic-imagein-error' );
         p.dropTarget.classList.add( 'pandymic-imagein-drag' );
       });
 
-      p.dropTarget.addEventListener( 'dragover', ( e ) => {
+      p.dropTarget.addEventListener( 'dragover', e => {
         e.preventDefault();
         if ( p.dropTarget.dataset.pandymicImageinMessage.length ) p.dropTarget.dataset.pandymicImageinMessage = '';
         p.dropTarget.classList.remove( 'pandymic-imagein-error' );
         p.dropTarget.classList.add( 'pandymic-imagein-drag' );
       });
 
-      p.dropTarget.addEventListener( 'dragleave', ( e ) => {
+      p.dropTarget.addEventListener( 'dragleave', e => {
         e.preventDefault();
         p.dropTarget.classList.remove( 'pandymic-imagein-drag' );
       });
@@ -243,6 +243,6 @@
     }
   };
   let p = window.pandymicImagein;
-  if ( 'complete' !== document.readyState ) document.addEventListener( 'DOMContentLoaded', ( e ) => { p.run(); } );
+  if ( 'complete' !== document.readyState ) document.addEventListener( 'DOMContentLoaded', e => { p.run(); } );
   else p.run();
-})();
+} )();

@@ -1,0 +1,129 @@
+.pandymic-imagein {
+
+  position: relative;
+  background-color: #fff;
+  color: #666;
+  width: 512px;
+  height: 512px;
+  border-radius:60px;
+  transition: opacity 375ms ease-out, scale 250ms ease-out 125ms;
+  overflow: visible;
+
+  &::backdrop {
+
+    background-color: #000;
+    opacity: 0.85;
+
+  }
+
+  &:before {
+
+    content: '';
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+    border: 5px dashed currentcolor;
+    border-radius: 50px;
+    transition: scale 125ms ease-in;
+
+  }
+
+  &:after {
+
+    content: 'Drag file here.';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    max-width: 75vw;
+    translate: -50% -50%;
+    color: currentcolor;
+    font-family: monospace;
+    font-size: 5vh;
+    line-height: 1.1;
+    text-align: center;
+
+  }
+
+  &.pandymic-imagein-drag {
+
+    &:after {
+      content: 'Drop file!';
+    }
+
+  }
+
+  &.pandymic-imagein-error {
+
+    color: #c30;
+
+  }
+
+  &.pandymic-imagein-drag {
+
+    color: #06c;
+
+    &:before {
+      scale: 0.95;
+    }
+
+  }
+
+  &.pandymic-imagein-success {
+
+    pointer-events: none;
+    color: #0c3;
+
+  }
+
+  &:not([data-pandymic-imagein-message=""]) {
+
+    &:after {
+      content: attr( data-pandymic-imagein-message ) !important
+    }
+
+  }
+
+  button {
+
+    color: #666;
+    position: absolute;
+    left: calc( 50% - 40px );
+    bottom: -120px;
+    background-color: #fff;
+    border: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+    cursor: pointer;
+    transition: color 125ms ease-in, scale 125ms ease-in;
+    font-size: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+
+    &:hover {
+
+      color: #000;
+      scale: 1.05;
+
+    }
+
+    &:before {
+
+      content: '';
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      bottom: 5px;
+      left: 5px;
+      border: 5px dashed currentcolor;
+      border-radius: 35px;
+
+    }
+
+  }
+
+}

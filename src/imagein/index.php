@@ -4,40 +4,8 @@
 
 <title>Imagein File Replace</title>
 
-<style>
-
-body {
-  font-family: sans-serif;
-}
-
-h1 {
-  font-size: 2rem;
-}
-
-div {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-div a {
-  display: block;
-  aspect-ratio: 1 / 1;
-  flex: min( 256px, 5vw ) 1 1;
-  min-width: 256px;
-  max-height: max( 512px, 10vw );
-  overflow: hidden;
-}
-
-div a img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  pointer-events: none;
-}
-
-</style>
+<link rel="stylesheet" href="./style.css">
+<script src="script.js"></script>
 
 </head>
 
@@ -54,7 +22,7 @@ div a img {
 
 <h2>Gallery</h2>
 <p>Click to copy URL.</p>
-<div><?php
+<figure><?php
 
 $files = glob( __DIR__ . '/file/*.webp' );
 if ( is_array( $files ) ) {
@@ -67,24 +35,7 @@ if ( is_array( $files ) ) {
   }
 }
 
-?></div>
-
-<script>
-
-document.addEventListener( 'DOMContentLoaded', ( e ) => {
-  
-  document.querySelectorAll( 'div > a' ).forEach( ( link ) => {
-    
-    link.addEventListener( 'click', ( e ) => {
-      e.preventDefault();
-      window.navigator.clipboard.writeText( e.target.href );
-    } );
-    
-  } );
-  
-} );
-
-</script>
+?></figure>
 
 </body>
 
